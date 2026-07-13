@@ -1,5 +1,5 @@
 /* Daily Innovation Boost — service worker (offline app shell) */
-const CACHE = 'dib-2026-07-12';
+const CACHE = 'dib-2026-07-13-live';
 const ASSETS = [
   './',
   './index.html',
