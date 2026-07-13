@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1b3e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Innovation Boost">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<title>Daily Innovation Boost</title>
+<style>
+  :root{--navy:#0d1b3e;--navy2:#12244d;--gold:#c9a94e;--ink:#1a1f2b;--mut:#6a7382;--line:#e2e7f0;--bg:#f6f8fc;--ai:#1d5b6e;--rd:#6a4a86;}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.4;
+       padding-bottom:calc(64px + env(safe-area-inset-bottom));}
+  a{color:inherit;}
+  /* top bar */
+  header{position:sticky;top:0;z-index:20;background:var(--navy);color:#eef2fa;
+         padding:calc(10px + env(safe-area-inset-top)) 16px 10px;display:flex;align-items:center;gap:10px;}
+  header .logo{width:26px;height:26px;flex:0 0 auto;}
+  header .ttl{font-size:15px;font-weight:800;letter-spacing:.2px;}
+  header .sub{font-size:10.5px;color:#9fb0d0;margin-top:1px;}
+  header .rt{margin-left:auto;text-align:right;font-size:10px;color:#9fb0d0;line-height:1.35;}
+  header .rt b{color:#eef2fa;font-size:12px;display:block;}
+  /* views */
+  .view{display:none;padding:14px 14px 20px;max-width:900px;margin:0 auto;}
+  .view.active{display:block;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(13,27,62,.05);}
+  h2.sec{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--navy);font-weight:800;
+         border-bottom:1px solid var(--gold);padding-bottom:4px;margin:16px 2px 8px;}
+  h2.sec.ai{color:var(--ai);border-bottom-color:var(--ai);}
+  h2.sec.rd{color:var(--rd);border-bottom-color:var(--rd);}
+  /* home hero */
+  .hero{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#eef2fa;border:none;}
+  .hero .kick{font-size:9.5px;letter-spacing:2.4px;text-transform:uppercase;color:var(--gold);font-weight:700;}
+  .hero h1{font-size:22px;font-weight:800;margin:4px 0 6px;letter-spacing:-.3px;}
+  .hero p{font-size:12.5px;color:#cdd6ea;}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 4px;}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 6px;text-align:center;}
+  .stat .n{font-size:19px;font-weight:800;color:var(--navy);}
+  .stat .l{font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-top:1px;}
+  .btnrow{display:flex;gap:10px;margin-top:12px;}
+  .btn{flex:1;text-align:center;padding:12px;border-radius:10px;font-size:13.5px;font-weight:700;border:1.5px solid var(--navy);
+       background:var(--navy);color:#fff;cursor:pointer;text-decoration:none;}
+  .btn.alt{background:#fff;color:var(--navy);}
+  .btn:active{opacity:.85;}
+  .lead{font-size:12.5px;color:#333b48;}
+  /* entry card */
+  .top{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:6px;}
+  .badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#fff;background:var(--navy);padding:2px 7px;border-radius:5px;}
+  .fr{font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:20px;color:#fff;}
+  .fr.Fresh{background:#2f7d4f;}.fr.Recent{background:#c08a1e;}.fr.Context{background:#8a94a6;}
+  .dt{margin-left:auto;font-size:10.5px;color:var(--mut);}
+  .hl{font-size:14px;font-weight:700;margin-bottom:4px;}
+  .bd{font-size:12.5px;color:#333b48;margin-bottom:6px;}
+  .im{font-size:11.5px;color:#4a5768;background:#f4f1e7;border-left:2px solid var(--gold);padding:5px 8px;border-radius:0 5px 5px 0;margin-bottom:7px;}
+  .im b{color:#7a5f14;font-size:9px;text-transform:uppercase;letter-spacing:.5px;}
+  .rg{font-size:10.5px;color:var(--mut);margin-bottom:7px;}
+  .ctags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+  .ct{font-size:10px;padding:2px 7px;border-radius:12px;background:#eef1f7;color:#4a5768;cursor:pointer;}
+  .ct:active{background:var(--gold);color:#3a2f08;}
+  .src{font-size:11px;}.src a{color:var(--navy);font-weight:600;text-decoration:none;}
+  .impl li{font-size:12px;margin:0 0 6px 16px;color:#3a3320;}
+  .note{font-size:10.5px;color:var(--mut);line-height:1.5;}
+  .note code{background:#eef1f7;padding:0 3px;border-radius:3px;}
+  /* archive toolbar */
+  .tb input,.tb select{width:100%;font-size:14px;padding:10px 11px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);}
+  .tb .rowg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+  .tb .dg{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:6px;align-items:center;margin-top:8px;}
+  .tb .lbl{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;}
+  .modes{display:flex;gap:8px;align-items:center;margin-top:8px;}
+  .mbtn{font-size:11px;padding:7px 11px;border:1.5px solid var(--line);border-radius:8px;background:#fff;font-weight:700;color:var(--navy);cursor:pointer;}
+  .mbtn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .cloud{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;max-height:110px;overflow:auto;padding-top:10px;border-top:1px dashed var(--line);}
+  .chip{font-size:11px;padding:4px 9px;border-radius:20px;border:1.5px solid var(--line);background:#fff;cursor:pointer;color:#3a4354;white-space:nowrap;}
+  .chip.on{background:var(--gold);border-color:var(--gold);color:#3a2f08;font-weight:700;}
+  .chip .c{color:var(--mut);margin-left:3px;}.chip.on .c{color:#6b5410;}
+  .count{font-size:12px;color:var(--mut);margin:14px 2px 8px;}.count b{color:var(--navy);}
+  .empty{text-align:center;padding:40px 16px;color:var(--mut);font-size:13px;}
+  mark{background:#fff1b8;padding:0 1px;border-radius:2px;}
+  /* bottom nav */
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);
+      display:flex;padding-bottom:env(safe-area-inset-bottom);}
+  nav button{flex:1;border:none;background:none;padding:9px 0 8px;cursor:pointer;color:var(--mut);font-size:10px;font-weight:600;}
+  nav button .ic{display:block;font-size:18px;line-height:1;margin-bottom:3px;}
+  nav button.active{color:var(--navy);}
+  nav button.active .ic{filter:none;}
+  .offline{background:#fff4d6;color:#7a5f14;font-size:11px;text-align:center;padding:5px;display:none;}
+  .install{display:none;margin:10px 0 0;}
+  .toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:12px;
+         padding:9px 14px;border-radius:20px;opacity:0;transition:opacity .3s;z-index:50;pointer-events:none;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<header>
+  <img class="logo" src="icons/icon-192-any.png" alt="">
+  <div>
+    <div class="ttl">Daily Innovation Boost</div>
+    <div class="sub" id="hsub">Gases, Materials &amp; Industrial-AI</div>
+  </div>
+  <div class="rt"><b id="hdate">—</b><span id="hver">—</span></div>
+</header>
+<div class="offline" id="offline">Offline — showing your last saved briefing</div>
+
+<!-- HOME -->
+<section class="view active" id="v-home">
+  <div class="card hero">
+    <div class="kick">Today's Boost</div>
+    <h1 id="homeDate">—</h1>
+    <p id="homeLead">—</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n" id="stEntries">0</div><div class="l">Entries</div></div>
+    <div class="stat"><div class="n" id="stSections">0</div><div class="l">Sections</div></div>
+    <div class="stat"><div class="n" id="stFresh">0</div><div class="l">Fresh</div></div>
+    <div class="stat"><div class="n" id="stLatest">—</div><div class="l">Latest</div></div>
+  </div>
+  <div class="btnrow">
+    <button class="btn" onclick="go('briefing')">Read today's briefing</button>
+    <button class="btn alt" onclick="go('archive')">Search archive</button>
+  </div>
+  <a class="btn alt install" id="installBtn">⤓ Install app to home screen</a>
+  <h2 class="sec">Freshest today</h2>
+  <div id="homeFresh"></div>
+</section>
+
+<!-- BRIEFING -->
+<section class="view" id="v-briefing">
+  <div class="card">
+    <div style="font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:#9a7b2e;font-weight:700;">Intelligence Briefing</div>
+    <h1 style="font-size:19px;font-weight:800;color:var(--navy);margin:3px 0 4px;">Gases, Materials &amp; Industrial-AI</h1>
+    <div style="font-size:11px;color:var(--mut);" id="brWindow">—</div>
+    <p class="lead" id="brExec" style="margin-top:9px;"></p>
+    <a class="btn" id="pdfBtn" style="margin-top:12px;display:block;" target="_blank">⤓ Open full one-page PDF</a>
+  </div>
+  <div id="brBody"></div>
+  <div class="card">
+    <h2 class="sec" style="margin-top:0;">Cross-Industry Implications</h2>
+    <ul class="impl" id="brImpl"></ul>
+  </div>
+  <div class="card">
+    <h2 class="sec" style="margin-top:0;">Coverage &amp; Sourcing</h2>
+    <p class="note" id="brNote"></p>
+  </div>
+</section>
+
+<!-- ARCHIVE -->
+<section class="view" id="v-archive">
+  <div class="card tb">
+    <input id="q" placeholder="Search headline, detail, source, tags…">
+    <div class="rowg">
+      <select id="section"><option value="">All sections</option></select>
+      <select id="fresh"><option value="">All freshness</option><option>Fresh</option><option>Recent</option><option>Context</option></select>
+    </div>
+    <div class="dg">
+      <span class="lbl">From</span><input type="date" id="from">
+      <span class="lbl">To</span><input type="date" id="to">
+    </div>
+    <div class="modes">
+      <span class="lbl">Tags</span>
+      <button class="mbtn active" id="mAll">Match ALL</button>
+      <button class="mbtn" id="mAny">Match ANY</button>
+      <button class="mbtn" id="clr" style="margin-left:auto;">Clear</button>
+    </div>
+    <div class="cloud" id="cloud"></div>
+  </div>
+  <div class="count" id="count"></div>
+  <div id="grid"></div>
+  <div class="empty" id="empty" style="display:none;">No entries match. Try clearing tags or broadening the search.</div>
+</section>
+
+<nav>
+  <button class="active" id="nav-home" onclick="go('home')"><span class="ic">◉</span>Home</button>
+  <button id="nav-briefing" onclick="go('briefing')"><span class="ic">▤</span>Briefing</button>
+  <button id="nav-archive" onclick="go('archive')"><span class="ic">⌕</span>Archive</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+const APP_DATA = {"meta": {"app": "Daily Innovation Boost", "briefingDate": "2026-07-12", "coverage": "27 Jun – 12 Jul 2026", "version": "v2026:07:12", "pdf": "Gases_Materials_Briefing_2026-07-12.pdf"}, "homeLead": "Critical-element scarcity is reshaping gas & materials supply — while applied AI crosses into the physical lab and semiconductor R&D capital consolidates upstream.", "execSummary": "The period's defining thread is critical-element scarcity reordering the gas & materials supply chain — a reported permanent halt of Japanese WF6 output and moves to lock in independent helium — running alongside an accelerating materials-substitution wave (molybdenum-for-tungsten, sodium-for-lithium, methane-to-graphene). In parallel, applied AI crossed from prediction into the physical lab: a near-autonomous AI chemist and an AI-designed multimetallic catalyst produced experimentally validated results, while the first UL-certified explosive-atmosphere inspection robot cleared regulatory deployment. Underwriting it all, semiconductor R&D capital is consolidating upstream — Micron committing up to US$3B including a wafer-maker stake and joint process-R&D — making supply security and atomic-scale engineering one strategic problem across chips, energy, and aerospace.", "implications": ["Critical-element scarcity is one problem across sectors. WF6 tungsten, PEM iridium and MRI/fab helium trace to concentrated upstream supply — the same de-risking logic (substitution, on-shoring, atom-efficiency) recurs from chips to electrolyzers, and now drives R&D capital upstream (Micron–GlobalWafers).", "AI has crossed into the physical lab. An autonomous AI chemist (yield 16.6%→25.2%) and an AI-designed multimetallic catalyst produced validated results — compressing the discovery cycle for the precursors, catalysts and battery materials the other sections track.", "Robotics is entering the hazardous gas/petrochemical envelope. The first UL-certified explosive-atmosphere inspection robot links industrial-gas safety with autonomy — a template for CCUS, hydrogen and refinery monitoring.", "Methane-to-graphene bridges oil & gas, batteries and electronics — a gas-precursor route with an H2 byproduct turns a hydrocarbon feedstock into battery/coating material and clean fuel."], "sourcingNote": "Window widened from a strict 24h to 27 Jun–12 Jul 2026; each item date-stamped. Freshness: <b>Fresh</b>=past few days; <b>Recent</b>=past ~2 weeks; <b>Context</b>=older but relevant. No figures estimated or invented. <b>Not verified this period</b>: oil &amp; gas/petrochemicals, medical/sterilisation gases &amp; isotopes, additive-manufacturing shielding gases. WF6 halt and Peak/BYD sodium items are trade-press-sourced. Data mirrors the isolated <code>research_intel.briefing_entries</code> Supabase archive.", "entries": [{"briefing_date": "2026-07-12", "section": "Batteries & Energy Storage", "headline": "Solid-state electrolyte fracture mechanism solved", "body": "Max Planck (MPI-SusMat) showed hydrostatic stress within lithium dendrites drives brittle fracture of ceramic solid electrolytes. Published in Nature.", "impact": "Addresses the top short-circuit failure mode blocking commercial solid-state EV cells; points to design fixes.", "source_name": "ScienceDaily / MPI-SusMat (Nature)", "source_url": "https://www.sciencedaily.com/releases/2026/07/260710003533.htm", "source_date": "2026-07-10", "freshness": "Fresh", "region": "Germany", "tags": ["batteries", "solid-state", "lithium", "dendrite", "ceramic-electrolyte", "EV", "Nature", "Max-Planck", "Germany", "energy-storage"]}, {"briefing_date": "2026-07-12", "section": "Batteries & Energy Storage", "headline": "Sodium-ion scaling and tin-anode chemistry", "body": "US maker Peak announced a 4-GWh sodium-ion plant (Sacramento); BYD reportedly studying tin anodes to raise sodium-ion energy density.", "impact": "Reduces lithium/cobalt dependence for grid storage.", "source_name": "SodiumBatteryHub (trade headlines; detail unverified)", "source_url": "https://sodiumbatteryhub.com/2026/07/09/peak-plans-4-gwh-sodium-ion-battery-factory-in-sacramento/", "source_date": "2026-07-09", "freshness": "Fresh", "region": "USA/China", "tags": ["batteries", "sodium-ion", "tin-anode", "grid-storage", "Peak", "BYD", "USA", "China", "energy-storage", "manufacturing"]}, {"briefing_date": "2026-07-12", "section": "Hydrogen & Industrial Gases", "headline": "Independent North American helium supply chain", "body": "AirLife took a controlling stake in US helium firm GNG, integrating production, 520+ mi of pipeline, and Utah liquefaction.", "impact": "Builds an independent liquid-helium source amid MRI/semiconductor/cryogenics helium insecurity.", "source_name": "GlobeNewswire", "source_url": "https://www.globenewswire.com/news-release/2026/07/08/3323983/0/en/AirLife-acquires-controlling-stake-in-GNG-Creating-a-Fully-Integrated-Global-Helium-Supply-Chain.html", "source_date": "2026-07-08", "freshness": "Fresh", "region": "USA/India", "tags": ["helium", "industrial-gases", "supply-chain", "AirLife", "GNG", "liquefaction", "pipeline", "USA", "India", "cryogenics", "MRI"]}, {"briefing_date": "2026-07-12", "section": "Advanced Materials", "headline": "Biobased polymers beating polyolefins", "body": "Plant-oil/amino-acid/sugar-derived poly(ester amide)s (via olefin metathesis) exceed PE/PP on film strength, are chemically recyclable, and in phenylalanine variants self-heal at room temperature.", "impact": "Rare biobased, recyclable polymer exceeding conventional plastic mechanics.", "source_name": "EurekAlert / Tokyo Metropolitan University", "source_url": "https://www.eurekalert.org/news-releases/1134534", "source_date": "2026-07-06", "freshness": "Fresh", "region": "Japan", "tags": ["advanced-materials", "polymers", "biobased", "recyclable", "self-healing", "poly-ester-amide", "circular-economy", "Tokyo-Metropolitan", "Japan"]}, {"briefing_date": "2026-07-12", "section": "Advanced Materials", "headline": "Scalable graphene oxide from methane", "body": "Texas A&M atmospheric-plasma process converts natural gas into high-purity graphene oxide while co-producing hydrogen, with no harsh chemicals.", "impact": "Claimed first scalable GO route from a gaseous precursor, sidestepping mined graphite.", "source_name": "Texas A&M Engineering News", "source_url": "https://news.engineering.tamu.edu/news/2026/07/03/unexpected-discovery-yields-new-graphene-oxide-production-method/", "source_date": "2026-07-03", "freshness": "Fresh", "region": "USA", "tags": ["advanced-materials", "graphene-oxide", "2D-materials", "methane", "natural-gas", "plasma", "hydrogen", "Texas-A&M", "USA", "carbon"]}, {"briefing_date": "2026-07-12", "section": "Semiconductors", "headline": "On-site UHP gases for first US HBM packaging fab", "body": "Air Liquide committing US$170M+ for two on-site ultra-high-purity units (N2, O2, Ar, H2) feeding SK hynix's first US advanced-packaging (HBM) fab in Indiana; live by end-2028.", "impact": "Localises the clean-process gas backbone for AI memory packaging.", "source_name": "Air Liquide", "source_url": "https://www.airliquide.com/group/press-releases-news/2026-07-01/air-liquide-invests-over-170m-usd-us-support-sk-hynixs-ambition-build-global-ai-memory-ecosystem", "source_date": "2026-07-01", "freshness": "Fresh", "region": "USA/France", "tags": ["semiconductors", "gases", "industrial-gases", "nitrogen", "oxygen", "argon", "hydrogen", "HBM", "packaging", "Air-Liquide", "SK-hynix", "USA", "AI-memory"]}, {"briefing_date": "2026-07-12", "section": "Aerospace", "headline": "In-orbit cryogenic propellant transfer", "body": "NASA Marshall + L3Harris thermal-tested a cryocoupler for transferring cryogenic propellant (liquid H2/O2 class) between spacecraft at -321F under simulated misaligned docking.", "impact": "Step toward orbital propellant depots for lunar/Mars missions.", "source_name": "Interesting Engineering", "source_url": "https://interestingengineering.com/space/orbital-propellant-depots-move-closer-to-reality-with-nasa-cryocoupler-tests", "source_date": "2026-06-30", "freshness": "Recent", "region": "USA", "tags": ["aerospace", "cryogenic", "propellant", "hydrogen", "oxygen", "NASA", "L3Harris", "in-orbit-refueling", "space", "USA"]}, {"briefing_date": "2026-07-12", "section": "Hydrogen & Industrial Gases", "headline": "15-atom iridium OER catalyst", "body": "A ~15-atom Ir nanocluster (~0.9 nm) delivers ~1.5x the mass activity of commercial iridium for the acidic oxygen-evolution reaction, synthesised in open air.", "impact": "Attacks the iridium-scarcity bottleneck throttling PEM electrolyzer scale-up for green H2.", "source_name": "pv-magazine", "source_url": "https://www.pv-magazine.com/2026/06/24/catalyst-breakthrough-could-accelerate-green-hydrogen-production/", "source_date": "2026-06-24", "freshness": "Recent", "region": "Australia/Japan/USA", "tags": ["hydrogen", "green-hydrogen", "iridium", "catalyst", "PEM", "electrolysis", "OER", "Adelaide", "Tohoku", "Vanderbilt", "clean-energy"]}, {"briefing_date": "2026-07-12", "section": "Advanced Materials", "headline": "Twist-tunable quantum light in hexagonal boron nitride", "body": "Twisting atomically thin hexagonal boron nitride (hBN) shifts the color of embedded single-photon emitters.", "impact": "Practical tuning lever for quantum computing, secure comms and sensing.", "source_name": "phys.org / UT Sydney", "source_url": "https://phys.org/news/2026-06-tiny-quantum-sources-atomically-thin.html", "source_date": "2026-06-20", "freshness": "Recent", "region": "Australia", "tags": ["advanced-materials", "2D-materials", "hBN", "boron-nitride", "quantum", "single-photon", "photonics", "UTS", "Australia"]}, {"briefing_date": "2026-07-12", "section": "Semiconductors", "headline": "WF6 supply shock", "body": "Two Japanese producers (Kanto Denka, Central Glass) reportedly ceasing tungsten hexafluoride (WF6) output from 1 Jul after China's high-purity tungsten-powder exports to Japan fell to zero; spot prices reportedly +200%+.", "impact": "WF6 is the CVD/ALD precursor for tungsten fill in 3D NAND wordlines and HBM/logic interconnect; halt threatens NAND/DRAM/HBM throughput.", "source_name": "TrendForce / Wccftech (trade press; no primary producer release found)", "source_url": "https://www.trendforce.com/news/2026/06/12/", "source_date": "2026-06-12", "freshness": "Context", "region": "Japan/China", "tags": ["semiconductors", "gases", "specialty-gas", "WF6", "tungsten", "supply-chain", "Japan", "China", "NAND", "DRAM", "HBM", "CVD", "ALD"]}, {"briefing_date": "2026-07-12", "section": "Semiconductors", "headline": "Molybdenum replaces tungsten in 375-layer 3D NAND", "body": "SK hynix moving to Mo wordline metal (ALD/CVD) in its 375-layer 3D NAND, mass production targeted end-2026. Mo deposits without the tungsten barrier/liner, enabling denser stacks.", "impact": "Durable materials shift benefiting Mo precursor suppliers (e.g. MoO2Cl2) and Mo ALD tooling.", "source_name": "TheElec", "source_url": "https://www.thelec.net/news/articleView.html?idxno=11210", "source_date": "2026-06-11", "freshness": "Context", "region": "South Korea", "tags": ["semiconductors", "molybdenum", "tungsten", "ALD", "CVD", "precursors", "NAND", "SK-hynix", "MoO2Cl2", "materials-substitution"]}, {"briefing_date": "2026-07-12", "section": "Carbon Capture (CCUS)", "headline": "Cryogenic CO2 capture pilot for cement", "body": "Air Liquide's Cryocap FG cryogenic CO2-capture pilot started up at Holcim's CaptureLab, processing 3,000 Nm3/h of cement flue gas.", "impact": "Dedicated platform for one of the hardest-to-abate CO2 sources (cement).", "source_name": "Carbon Herald", "source_url": "https://carbonherald.com/air-liquide-and-holcim-launch-industrial-scale-carbon-capture-pilot-for-cement/", "source_date": "2026-06-10", "freshness": "Context", "region": "France", "tags": ["CCUS", "CO2", "carbon-capture", "cement", "cryogenic", "flue-gas", "Air-Liquide", "Holcim", "France", "decarbonization"]}, {"briefing_date": "2026-07-12", "section": "AI in Industry", "headline": "Near-autonomous AI chemist lifts reaction yield", "body": "OpenAI + Molecule.one paired a frontier reasoning model with lab agents to optimise a copper-mediated Chan-Lam coupling; 10,080 physical reactions raised average yield from 16.6% to 25.2%.", "impact": "Closes the loop from scientific reasoning to physical experimental validation on an important but historically low-yielding drug-synthesis reaction class.", "source_name": "R&D World (OpenAI / Molecule.one)", "source_url": "https://www.rdworldonline.com/openai-and-molecule-one-report-a-near-autonomous-ai-chemist-that-improved-a-stubborn-coupling-reaction/", "source_date": "2026-06-22", "freshness": "Recent", "region": "USA", "tags": ["ai-in-industry", "molecule-discovery", "self-driving-lab", "generative-chemistry", "reaction-optimization", "catalyst", "OpenAI", "Molecule-one", "drug-synthesis", "USA"]}, {"briefing_date": "2026-07-12", "section": "AI in Industry", "headline": "UL-certified robot for hazardous-plant inspection", "body": "ExRobotics ExR-2.5 is the first robot UL 6260-certified for explosive atmospheres in North America; acoustic imaging plus thermal/HD cameras autonomously detect gas leaks and equipment damage in oil, gas and chemical plants.", "impact": "Regulatory milestone that legally enables autonomous inspection in explosive atmospheres, reducing worker exposure amid a skilled-worker shortfall.", "source_name": "The Robot Report (ExRobotics)", "source_url": "https://www.therobotreport.com/exrobotics-launches-ul-certified-inspection-robot-for-hazardous-environments/", "source_date": "2026-06-23", "freshness": "Recent", "region": "Netherlands", "tags": ["ai-in-industry", "robotics", "plant-safety", "inspection", "hazardous-environment", "gas-leak-detection", "predictive-maintenance", "oil-gas", "ExRobotics", "automation"]}, {"briefing_date": "2026-07-12", "section": "R&D Labs", "headline": "Micron commits up to US$3B, incl. wafer-maker stake", "body": "Micron announced up to US$3B in strategic investment including US$500M into GlobalWafers Sherman, Texas 300mm fab, a 10-year supply agreement, and intent to jointly explore advanced-wafer process R&D.", "impact": "Locks in critical upstream materials for AI-memory roadmaps and pulls wafer process R&D into a joint program — a vertical-integration signal.", "source_name": "GlobeNewswire (Micron)", "source_url": "https://www.globenewswire.com/news-release/2026/07/09/3324795/14450/en/Micron-Announces-Up-to-3-Billion-Strategic-Investment-to-Strengthen-U-S-Semiconductor-Ecosystem.html", "source_date": "2026-07-09", "freshness": "Fresh", "region": "USA", "tags": ["rd-labs", "semiconductors", "funding", "expansion", "wafers", "supply-chain", "GlobalWafers", "Micron", "ai-memory", "USA"]}, {"briefing_date": "2026-07-12", "section": "R&D Labs", "headline": "Applied Materials EPIC Center adds first universities", "body": "Applied Materials named Arizona State University, RPI and Stanford as inaugural university partners at its EPIC Center, billed as the largest-ever US investment in advanced semiconductor equipment R&D; facility targeted operational in 2026.", "impact": "Public-private research consortium giving universities access to industry-scale chipmaking equipment, strengthening the US lab-to-fab pipeline.", "source_name": "StockTitan (Applied Materials)", "source_url": "https://www.stocktitan.net/news/AMAT/applied-materials-announces-asu-rpi-and-stanford-to-join-epic-43ca371oxi9i.html", "source_date": "2026-05-11", "freshness": "Context", "region": "USA", "tags": ["rd-labs", "semiconductors", "consortium", "universities", "equipment", "Applied-Materials", "Stanford", "ASU", "RPI", "USA"]}]};
+const DATA = APP_DATA.entries;
+const SECTION_ORDER = ["Semiconductors","Batteries & Energy Storage","Carbon Capture (CCUS)","Hydrogen & Industrial Gases","Aerospace","Advanced Materials","AI in Industry","R&D Labs"];
+
+function esc(s){return (s==null?'':String(s)).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
+function hi(s,terms){let o=esc(s);terms.forEach(t=>{if(t.length<2)return;o=o.replace(new RegExp('('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>');});return o;}
+function secClass(sec){return sec==='AI in Industry'?'ai':(sec==='R&D Labs'?'rd':'');}
+
+function entryCard(d,terms){
+  terms=terms||[];
+  return '<div class="card"><div class="top"><span class="badge">'+esc(d.section)+'</span>'+
+    '<span class="fr '+d.freshness+'">'+d.freshness+'</span><span class="dt">'+d.source_date+'</span></div>'+
+    '<div class="hl">'+hi(d.headline,terms)+'</div>'+
+    '<div class="bd">'+hi(d.body,terms)+'</div>'+
+    (d.impact?'<div class="im"><b>Impact</b><br>'+hi(d.impact,terms)+'</div>':'')+
+    '<div class="rg">Region: '+esc(d.region||'—')+'</div>'+
+    '<div class="ctags">'+d.tags.map(t=>'<span class="ct" data-t="'+esc(t)+'">'+esc(t)+'</span>').join('')+'</div>'+
+    '<div class="src">Source: <a href="'+esc(d.source_url)+'" target="_blank" rel="noopener">'+esc(d.source_name)+' ↗</a></div></div>';
+}
+
+/* ---------- HOME ---------- */
+function initHome(){
+  document.getElementById('hdate').textContent = APP_DATA.meta.briefingDate;
+  document.getElementById('hver').textContent = APP_DATA.meta.version;
+  document.getElementById('homeDate').textContent = fmtDate(APP_DATA.meta.briefingDate);
+  document.getElementById('homeLead').textContent = APP_DATA.homeLead;
+  document.getElementById('stEntries').textContent = DATA.length;
+  document.getElementById('stSections').textContent = new Set(DATA.map(d=>d.section)).size;
+  document.getElementById('stFresh').textContent = DATA.filter(d=>d.freshness==='Fresh').length;
+  const latest = DATA.map(d=>d.source_date).sort().slice(-1)[0]||'—';
+  document.getElementById('stLatest').textContent = latest.slice(5);
+  const fresh = DATA.filter(d=>d.freshness==='Fresh').sort((a,b)=>b.source_date<a.source_date?-1:1).slice(0,3);
+  document.getElementById('homeFresh').innerHTML = fresh.map(d=>entryCard(d)).join('');
+  bindTagChips(document.getElementById('homeFresh'));
+}
+function fmtDate(s){const m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const p=s.split('-');return p[2]+' '+m[+p[1]-1]+' '+p[0];}
+
+/* ---------- BRIEFING ---------- */
+function initBriefing(){
+  document.getElementById('brWindow').textContent = 'Coverage window: '+APP_DATA.meta.coverage+' · Global';
+  document.getElementById('brExec').textContent = APP_DATA.execSummary;
+  document.getElementById('pdfBtn').href = APP_DATA.meta.pdf;
+  const bySec={}; DATA.forEach(d=>{(bySec[d.section]=bySec[d.section]||[]).push(d);});
+  let html='';
+  SECTION_ORDER.forEach(sec=>{
+    if(!bySec[sec])return;
+    html+='<h2 class="sec '+secClass(sec)+'">'+esc(sec)+'</h2>';
+    bySec[sec].sort((a,b)=>b.source_date<a.source_date?-1:1).forEach(d=>{html+=entryCard(d);});
+  });
+  document.getElementById('brBody').innerHTML = html;
+  document.getElementById('brImpl').innerHTML = APP_DATA.implications.map(x=>'<li>'+x+'</li>').join('');
+  document.getElementById('brNote').innerHTML = APP_DATA.sourcingNote;
+  bindTagChips(document.getElementById('brBody'));
+}
+
+/* ---------- ARCHIVE ---------- */
+let mode='all'; const selTags=new Set();
+const q=()=>document.getElementById('q');
+function initArchive(){
+  const secSel=document.getElementById('section');
+  [...new Set(DATA.map(d=>d.section))].sort().forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;secSel.appendChild(o);});
+  const tc={};DATA.forEach(d=>d.tags.forEach(t=>tc[t]=(tc[t]||0)+1));
+  const sorted=Object.keys(tc).sort((a,b)=>tc[b]-tc[a]||a.localeCompare(b));
+  const cloud=document.getElementById('cloud');
+  window._renderCloud=()=>{cloud.innerHTML='';sorted.forEach(t=>{const c=document.createElement('span');
+    c.className='chip'+(selTags.has(t)?' on':'');c.innerHTML=esc(t)+' <span class="c">'+tc[t]+'</span>';
+    c.onclick=()=>{selTags.has(t)?selTags.delete(t):selTags.add(t);render();};cloud.appendChild(c);});};
+  ['q','section','fresh','from','to'].forEach(id=>{const e=document.getElementById(id);e.addEventListener('input',render);e.addEventListener('change',render);});
+  document.getElementById('mAll').onclick=function(){mode='all';this.classList.add('active');document.getElementById('mAny').classList.remove('active');render();};
+  document.getElementById('mAny').onclick=function(){mode='any';this.classList.add('active');document.getElementById('mAll').classList.remove('active');render();};
+  document.getElementById('clr').onclick=()=>{q().value='';document.getElementById('section').value='';document.getElementById('fresh').value='';document.getElementById('from').value='';document.getElementById('to').value='';selTags.clear();window._renderCloud();render();};
+  window._renderCloud(); render();
+}
+function render(){
+  const text=q().value.trim().toLowerCase();
+  const terms=text.split(/\s+/).filter(Boolean);
+  const sec=document.getElementById('section').value,fr=document.getElementById('fresh').value,
+        f=document.getElementById('from').value,t=document.getElementById('to').value;
+  let rows=DATA.filter(d=>{
+    if(sec&&d.section!==sec)return false;
+    if(fr&&d.freshness!==fr)return false;
+    if(f&&d.source_date<f)return false;
+    if(t&&d.source_date>t)return false;
+    if(selTags.size){const h=[...selTags];
+      if(mode==='all'&&!h.every(x=>d.tags.includes(x)))return false;
+      if(mode==='any'&&!h.some(x=>d.tags.includes(x)))return false;}
+    if(terms.length){const hay=(d.headline+' '+d.body+' '+d.impact+' '+d.source_name+' '+d.section+' '+d.region+' '+d.tags.join(' ')).toLowerCase();
+      if(!terms.every(tm=>hay.includes(tm)))return false;}
+    return true;});
+  rows.sort((a,b)=>b.source_date<a.source_date?-1:b.source_date>a.source_date?1:0);
+  document.getElementById('count').innerHTML='<b>'+rows.length+'</b> of '+DATA.length+' entries'+(selTags.size?(' · '+selTags.size+' tag'+(selTags.size>1?'s':'')):'');
+  const grid=document.getElementById('grid');grid.innerHTML=rows.map(d=>entryCard(d,terms)).join('');
+  document.getElementById('empty').style.display=rows.length?'none':'block';
+  bindTagChips(grid);
+}
+function bindTagChips(scope){scope.querySelectorAll('.ct').forEach(c=>c.onclick=()=>{const tg=c.getAttribute('data-t');selTags.add(tg);go('archive');if(window._renderCloud)window._renderCloud();render();toast('Filtered archive by "'+tg+'"');});}
+
+/* ---------- NAV ---------- */
+function go(v){
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));
+  document.getElementById('v-'+v).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-'+v).classList.add('active');
+  window.scrollTo(0,0);
+}
+let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),1800);}
+
+/* ---------- PWA plumbing ---------- */
+function updOffline(){document.getElementById('offline').style.display=navigator.onLine?'none':'block';}
+window.addEventListener('online',updOffline);window.addEventListener('offline',updOffline);
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;const b=document.getElementById('installBtn');b.style.display='block';
+  b.onclick=async()=>{b.style.display='none';deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;};});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+
+/* init */
+initHome();initBriefing();initArchive();updOffline();
+document.getElementById('hsub').textContent='Gases, Materials & Industrial-AI';
+</script>
+</body>
+</html>
